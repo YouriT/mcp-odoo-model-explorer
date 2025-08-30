@@ -41,24 +41,34 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       
+      - name: Bump version (manual trigger only)
+        id: version
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          NEW_VERSION=$(pnpm version ${{ github.event.inputs.version }} --no-git-tag-version)
+          echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+          git add package.json
+          git commit -m "chore: bump version to ${NEW_VERSION}"
+      
       - name: Build project
         run: pnpm run build
       
       - name: Run tests (if available)
         run: pnpm test || echo "No tests found, skipping..."
       
-      - name: Bump version (manual trigger only)
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          pnpm version ${{ github.event.inputs.version }}
-          git push --follow-tags
-      
       - name: Publish to GitHub Packages
         run: pnpm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Create and push tag (manual trigger only)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git tag ${{ steps.version.outputs.new_version }}
+          git push origin ${{ steps.version.outputs.new_version }}
+          git push
       
       - name: Create GitHub Release (manual trigger only)
         if: github.event_name == 'workflow_dispatch'
