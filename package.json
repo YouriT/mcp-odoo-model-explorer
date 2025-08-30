@@ -1,5 +1,5 @@
 {
-  "name": "mcp-odoo",
+  "name": "@yourit/mcp-odoo-model-explorer",
   "version": "0.0.0",
   "description": "MCP server for exploring Odoo models and their relationships",
   "main": "./build/index.js",
