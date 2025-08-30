@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "odoo-model-explorer": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${workspaceFolder}/build/index.js"],
+      "envFile": "${workspaceFolder}/.env"
+    }
+  }
+}

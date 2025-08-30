@@ -1,0 +1,57 @@
+{
+  "name": "mcp-odoo",
+  "version": "1.0.0",
+  "description": "MCP server for exploring Odoo models and their relationships",
+  "main": "./build/index.js",
+  "type": "module",
+  "bin": {
+    "odoo-model-explorer": "./build/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc && chmod 755 build/index.js",
+    "start": "pnpm run build && node build/index.js",
+    "dev": "tsx src/index.ts",
+    "prepublishOnly": "pnpm run build"
+  },
+  "keywords": [
+    "mcp",
+    "odoo",
+    "model",
+    "context",
+    "protocol",
+    "explorer"
+  ],
+  "author": "Youri",
+  "license": "MIT",
+  "packageManager": "pnpm@10.15.0+sha512.486ebc259d3e999a4e8691ce03b5cac4a71cbeca39372a9b762cb500cfdf0873e2cb16abe3d951b1ee2cf012503f027b98b6584e4df22524e0c7450d9ec7aa7b",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YouriT/mcp-odoo-model-explorer.git"
+  },
+  "homepage": "https://github.com/YouriT/mcp-odoo-model-explorer#readme",
+  "bugs": {
+    "url": "https://github.com/YouriT/mcp-odoo-model-explorer/issues"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.11.4",
+    "dotenv": "^16.5.0",
+    "zod": "^3.25.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.19",
+    "prettier": "^3.6.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  },
+  "files": [
+    "build",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
