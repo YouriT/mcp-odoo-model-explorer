@@ -22,7 +22,7 @@ A Model Context Protocol (MCP) server that provides AI assistants with tools to 
 ## 🚀 Features
 
 - **📋 List Models**: Get all Odoo models in your database with descriptions
-- **🔍 Model Fields**: Inspect field properties, types, relationships, and constraints  
+- **🔍 Model Fields**: Inspect field properties, types, relationships, and constraints
 - **📊 Sample Records**: Fetch sample data from any model with custom field selection
 - **🔗 Related Models**: Discover model relationships via many2one, one2many, many2many fields
 - **🧩 Model Methods**: Search Odoo GitHub source for model methods and implementations
@@ -31,6 +31,7 @@ A Model Context Protocol (MCP) server that provides AI assistants with tools to 
 ## 🛠️ Usage
 
 First, configure access to GitHub Packages:
+
 ```bash
 npm config set @yourit:registry https://npm.pkg.github.com
 ```
@@ -38,17 +39,23 @@ npm config set @yourit:registry https://npm.pkg.github.com
 ### With Claude Code (CLI)
 
 ```bash
-claude mcp add @yourit/mcp-odoo-model-explorer \
-  --env ODOO_URL \
-  --env ODOO_DB \
-  --env ODOO_USER \
-  --env ODOO_PASSWORD \
-  --env GITHUB_TOKEN
+claude mcp add-json mcp-odoo-model-explorer '{
+  "command": "npx",
+  "args": ["@yourit/mcp-odoo-model-explorer"],
+  "env": {
+    "ODOO_URL": "${ODOO_URL}",
+    "ODOO_DB": "${ODOO_DB}",
+    "ODOO_USER": "${ODOO_USER}",
+    "ODOO_PASSWORD": "${ODOO_PASSWORD}",
+    "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+  }
+}'
 ```
 
 ### With Claude Desktop
 
 Add to your Claude Desktop configuration (`claude_desktop_config.json`):
+
 ```json
 {
   "mcpServers": {
@@ -57,7 +64,7 @@ Add to your Claude Desktop configuration (`claude_desktop_config.json`):
       "args": ["@yourit/mcp-odoo-model-explorer"],
       "env": {
         "ODOO_URL": "${ODOO_URL}",
-        "ODOO_DB": "${ODOO_DB}", 
+        "ODOO_DB": "${ODOO_DB}",
         "ODOO_USER": "${ODOO_USER}",
         "ODOO_PASSWORD": "${ODOO_PASSWORD}",
         "GITHUB_TOKEN": "${GITHUB_TOKEN}"
@@ -70,6 +77,7 @@ Add to your Claude Desktop configuration (`claude_desktop_config.json`):
 ### With VS Code + MCP Extension
 
 Add to your `.vscode/mcp.json`:
+
 ```json
 {
   "servers": {
@@ -80,7 +88,7 @@ Add to your `.vscode/mcp.json`:
       "env": {
         "ODOO_URL": "${input:odoo-url}",
         "ODOO_DB": "${input:odoo-db}",
-        "ODOO_USER": "${input:odoo-user}", 
+        "ODOO_USER": "${input:odoo-user}",
         "ODOO_PASSWORD": "${input:odoo-password}",
         "GITHUB_TOKEN": "${input:github-token}"
       }
@@ -91,14 +99,14 @@ Add to your `.vscode/mcp.json`:
 
 ## 🔧 Available Tools
 
-| Tool | Description | Parameters |
-|------|-------------|------------|
-| `list-odoo-models` | List all models in database | None |
-| `get-model-fields` | Get field details for a model | `model` |
-| `get-model-records` | Fetch sample records | `model`, `limit`, `fields?` |
-| `search-model` | Search models with domain filters | `domain`, `limit`, `fields?` |
-| `get-related-models` | Find related models | `model` |
-| `get-model-methods` | Find model methods in Odoo source | `model`, `branch?` |
+| Tool                 | Description                       | Parameters                   |
+| -------------------- | --------------------------------- | ---------------------------- |
+| `list-odoo-models`   | List all models in database       | None                         |
+| `get-model-fields`   | Get field details for a model     | `model`                      |
+| `get-model-records`  | Fetch sample records              | `model`, `limit`, `fields?`  |
+| `search-model`       | Search models with domain filters | `domain`, `limit`, `fields?` |
+| `get-related-models` | Find related models               | `model`                      |
+| `get-model-methods`  | Find model methods in Odoo source | `model`, `branch?`           |
 
 ## 🛠️ Development
 

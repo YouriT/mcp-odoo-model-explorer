@@ -21,26 +21,26 @@ jobs:
     permissions:
       contents: write
       packages: write
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           registry-url: 'https://npm.pkg.github.com'
           cache: 'pnpm'
-      
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      
+
       - name: Bump version (manual trigger only)
         id: version
         if: github.event_name == 'workflow_dispatch'
@@ -51,25 +51,25 @@ jobs:
           echo "new_version=${NEW_VERSION}" >> "$GITHUB_OUTPUT"
           git add package.json
           git commit -m "chore: bump version to ${NEW_VERSION}"
-      
+
       - name: Build project
         run: pnpm run build
-      
+
       - name: Run tests (if available)
         run: pnpm test || echo "No tests found, skipping..."
-      
+
       - name: Publish to GitHub Packages
         run: pnpm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Create and push tag (manual trigger only)
         if: github.event_name == 'workflow_dispatch'
         run: |
           git tag ${{ steps.version.outputs.new_version }}
           git push origin ${{ steps.version.outputs.new_version }}
           git push
-      
+
       - name: Create GitHub Release (manual trigger only)
         if: github.event_name == 'workflow_dispatch'
         uses: softprops/action-gh-release@v2
