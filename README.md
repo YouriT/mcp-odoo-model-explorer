@@ -32,13 +32,13 @@ A Model Context Protocol (MCP) server that provides AI assistants with tools to 
 
 First, configure access to GitHub Packages:
 ```bash
-npm config set @YouriT:registry https://npm.pkg.github.com
+npm config set @yourit:registry https://npm.pkg.github.com
 ```
 
 ### With Claude Code (CLI)
 
 ```bash
-claude mcp add @YouriT/mcp-odoo-model-explorer \
+claude mcp add @yourit/mcp-odoo-model-explorer \
   --env ODOO_URL \
   --env ODOO_DB \
   --env ODOO_USER \
@@ -54,7 +54,7 @@ Add to your Claude Desktop configuration (`claude_desktop_config.json`):
   "mcpServers": {
     "odoo-model-explorer": {
       "command": "npx",
-      "args": ["@YouriT/mcp-odoo-model-explorer"],
+      "args": ["@yourit/mcp-odoo-model-explorer"],
       "env": {
         "ODOO_URL": "${ODOO_URL}",
         "ODOO_DB": "${ODOO_DB}", 
@@ -76,7 +76,7 @@ Add to your `.vscode/mcp.json`:
     "odoo-model-explorer": {
       "type": "stdio",
       "command": "npx",
-      "args": ["@YouriT/mcp-odoo-model-explorer"],
+      "args": ["@yourit/mcp-odoo-model-explorer"],
       "env": {
         "ODOO_URL": "${input:odoo-url}",
         "ODOO_DB": "${input:odoo-db}",
@@ -126,4 +126,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - [Model Context Protocol](https://modelcontextprotocol.io/)
 - [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
 - [Odoo Documentation](https://www.odoo.com/documentation/)
-- [Issues & Support](https://github.com/YouriT/mcp-odoo-model-explorer/issues)
+- [Issues & Support](https://github.com/yourit/mcp-odoo-model-explorer/issues)

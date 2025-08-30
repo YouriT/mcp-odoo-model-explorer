@@ -30,11 +30,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/YouriT/mcp-odoo-model-explorer.git"
+    "url": "https://github.com/yourit/mcp-odoo-model-explorer.git"
   },
-  "homepage": "https://github.com/YouriT/mcp-odoo-model-explorer#readme",
+  "homepage": "https://github.com/yourit/mcp-odoo-model-explorer#readme",
   "bugs": {
-    "url": "https://github.com/YouriT/mcp-odoo-model-explorer/issues"
+    "url": "https://github.com/yourit/mcp-odoo-model-explorer/issues"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.11.4",
