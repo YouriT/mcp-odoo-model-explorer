@@ -99,17 +99,17 @@ Add to your `.vscode/mcp.json`:
 
 ## 🔧 Available Tools
 
-| Tool                 | Description                             | Parameters                                    |
-| -------------------- | --------------------------------------- | --------------------------------------------- |
-| `list-odoo-models`   | List all models in database             | None                                          |
-| `get-model-fields`   | Get field details for a model           | `model`                                       |
-| `get-model-records`  | Fetch sample records                    | `model`, `limit`, `fields?`                   |
-| `search-model`       | Search models with domain filters       | `domain`, `limit`, `fields?`                  |
-| `search-records`     | Search records in a model               | `model`, `domain?`, `fields?`, `limit?`, `offset?`, `order?` |
-| `count-records`      | Count records matching domain filter    | `model`, `domain?`                            |
-| `get-record`         | Fetch a specific record by ID           | `model`, `record_id`, `fields?`               |
-| `get-related-models` | Find related models                     | `model`                                       |
-| `get-model-methods`  | Find model methods in Odoo source       | `model`, `branch?`                            |
+| Tool                 | Description                          | Parameters                                                   |
+| -------------------- | ------------------------------------ | ------------------------------------------------------------ |
+| `list-odoo-models`   | List all models in database          | None                                                         |
+| `get-model-fields`   | Get field details for a model        | `model`                                                      |
+| `get-model-records`  | Fetch sample records                 | `model`, `limit`, `fields?`                                  |
+| `search-model`       | Search models with domain filters    | `domain`, `limit`, `fields?`                                 |
+| `search-records`     | Search records in a model            | `model`, `domain?`, `fields?`, `limit?`, `offset?`, `order?` |
+| `count-records`      | Count records matching domain filter | `model`, `domain?`                                           |
+| `get-record`         | Fetch a specific record by ID        | `model`, `record_id`, `fields?`                              |
+| `get-related-models` | Find related models                  | `model`                                                      |
+| `get-model-methods`  | Find model methods in Odoo source    | `model`, `branch?`                                           |
 
 ## 🛠️ Development
 

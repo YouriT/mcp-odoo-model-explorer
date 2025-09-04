@@ -200,7 +200,7 @@ server.tool(
         ODOO_PASSWORD,
         'ir.model',
         'search_read',
-        domain || [],
+        [domain || []],
         {
           fields: fields && fields.length ? fields : irModelFields,
           limit: limit || 5
@@ -226,7 +226,9 @@ server.tool(
     domain: z
       .array(z.union([z.array(z.union([z.string(), z.number(), z.boolean()])), z.string()]))
       .optional()
-      .describe('Odoo domain filter (e.g. [["name", "ilike", "John"], ["active", "=", true]] or empty for all records)'),
+      .describe(
+        'Odoo domain filter (e.g. [["name", "ilike", "John"], ["active", "=", true]] or empty for all records)'
+      ),
     fields: z.array(z.string()).optional().describe('List of fields to fetch (optional)'),
     limit: z.number().optional().describe('Number of records to return (default: 10)'),
     offset: z.number().optional().describe('Number of records to skip (default: 0)'),
@@ -236,7 +238,7 @@ server.tool(
     try {
       const uid = await getOdooUid();
       const searchParams: any = {};
-      
+
       if (fields && fields.length) {
         searchParams.fields = fields;
       }
@@ -255,20 +257,13 @@ server.tool(
       const records = await odooJsonRpc('call', {
         service: 'object',
         method: 'execute_kw',
-        args: [
-          ODOO_DB,
-          uid,
-          ODOO_PASSWORD,
-          model,
-          'search_read',
-          domain || [],
-          searchParams
-        ]
+        args: [ODOO_DB, uid, ODOO_PASSWORD, model, 'search_read', [domain || []], searchParams]
       });
 
-      const resultText = records.length > 0 
-        ? records.map((rec: any) => JSON.stringify(rec, null, 2)).join('\n---\n')
-        : 'No records found matching the criteria.';
+      const resultText =
+        records.length > 0
+          ? records.map((rec: any) => JSON.stringify(rec, null, 2)).join('\n---\n')
+          : 'No records found matching the criteria.';
 
       return {
         content: [
@@ -299,23 +294,18 @@ server.tool(
     domain: z
       .array(z.union([z.array(z.union([z.string(), z.number(), z.boolean()])), z.string()]))
       .optional()
-      .describe('Odoo domain filter (e.g. [["name", "ilike", "John"], ["active", "=", true]] or empty for all records)')
+      .describe(
+        'Odoo domain filter (e.g. [["name", "ilike", "John"], ["active", "=", true]] or empty for all records)'
+      )
   },
   async ({ model, domain }) => {
     try {
       const uid = await getOdooUid();
-      
+
       const count = await odooJsonRpc('call', {
         service: 'object',
         method: 'execute_kw',
-        args: [
-          ODOO_DB,
-          uid,
-          ODOO_PASSWORD,
-          model,
-          'search_count',
-          domain || []
-        ]
+        args: [ODOO_DB, uid, ODOO_PASSWORD, model, 'search_count', [domain || []]]
       });
 
       return {
@@ -345,12 +335,15 @@ server.tool(
   {
     model: z.string().describe('Technical name of the Odoo model (e.g. res.partner)'),
     record_id: z.number().describe('ID of the record to fetch'),
-    fields: z.array(z.string()).optional().describe('List of fields to fetch (optional, fetches all if not specified)')
+    fields: z
+      .array(z.string())
+      .optional()
+      .describe('List of fields to fetch (optional, fetches all if not specified)')
   },
   async ({ model, record_id, fields }) => {
     const uid = await getOdooUid();
     const searchParams: any = {};
-    
+
     if (fields && fields.length) {
       searchParams.fields = fields;
     }
@@ -359,15 +352,7 @@ server.tool(
       const records = await odooJsonRpc('call', {
         service: 'object',
         method: 'execute_kw',
-        args: [
-          ODOO_DB,
-          uid,
-          ODOO_PASSWORD,
-          model,
-          'read',
-          [record_id],
-          searchParams
-        ]
+        args: [ODOO_DB, uid, ODOO_PASSWORD, model, 'read', [record_id], searchParams]
       });
 
       if (records.length === 0) {
