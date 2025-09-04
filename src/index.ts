@@ -219,6 +219,190 @@ server.tool(
 );
 
 server.tool(
+  'search-records',
+  'Search for records in a given Odoo model with domain filters. Can fetch single or multiple records.',
+  {
+    model: z.string().describe('Technical name of the Odoo model (e.g. res.partner)'),
+    domain: z
+      .array(z.union([z.array(z.union([z.string(), z.number(), z.boolean()])), z.string()]))
+      .optional()
+      .describe('Odoo domain filter (e.g. [["name", "ilike", "John"], ["active", "=", true]] or empty for all records)'),
+    fields: z.array(z.string()).optional().describe('List of fields to fetch (optional)'),
+    limit: z.number().optional().describe('Number of records to return (default: 10)'),
+    offset: z.number().optional().describe('Number of records to skip (default: 0)'),
+    order: z.string().optional().describe('Sort order (e.g. "name ASC" or "create_date DESC")')
+  },
+  async ({ model, domain, fields, limit, offset, order }) => {
+    try {
+      const uid = await getOdooUid();
+      const searchParams: any = {};
+      
+      if (fields && fields.length) {
+        searchParams.fields = fields;
+      }
+      if (limit !== undefined) {
+        searchParams.limit = Math.max(1, Math.min(1000, limit)); // Limit between 1 and 1000
+      } else {
+        searchParams.limit = 10;
+      }
+      if (offset !== undefined) {
+        searchParams.offset = Math.max(0, offset); // Ensure non-negative offset
+      }
+      if (order) {
+        searchParams.order = order;
+      }
+
+      const records = await odooJsonRpc('call', {
+        service: 'object',
+        method: 'execute_kw',
+        args: [
+          ODOO_DB,
+          uid,
+          ODOO_PASSWORD,
+          model,
+          'search_read',
+          domain || [],
+          searchParams
+        ]
+      });
+
+      const resultText = records.length > 0 
+        ? records.map((rec: any) => JSON.stringify(rec, null, 2)).join('\n---\n')
+        : 'No records found matching the criteria.';
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Found ${records.length} record(s):\n\n${resultText}`
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Error searching records in ${model}: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+
+server.tool(
+  'count-records',
+  'Count the number of records matching a domain filter in a given Odoo model.',
+  {
+    model: z.string().describe('Technical name of the Odoo model (e.g. res.partner)'),
+    domain: z
+      .array(z.union([z.array(z.union([z.string(), z.number(), z.boolean()])), z.string()]))
+      .optional()
+      .describe('Odoo domain filter (e.g. [["name", "ilike", "John"], ["active", "=", true]] or empty for all records)')
+  },
+  async ({ model, domain }) => {
+    try {
+      const uid = await getOdooUid();
+      
+      const count = await odooJsonRpc('call', {
+        service: 'object',
+        method: 'execute_kw',
+        args: [
+          ODOO_DB,
+          uid,
+          ODOO_PASSWORD,
+          model,
+          'search_count',
+          domain || []
+        ]
+      });
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Found ${count} record(s) in ${model}${domain && domain.length ? ' matching the domain filter' : ''}.`
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Error counting records in ${model}: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+
+server.tool(
+  'get-record',
+  'Fetch a specific record by ID from a given Odoo model.',
+  {
+    model: z.string().describe('Technical name of the Odoo model (e.g. res.partner)'),
+    record_id: z.number().describe('ID of the record to fetch'),
+    fields: z.array(z.string()).optional().describe('List of fields to fetch (optional, fetches all if not specified)')
+  },
+  async ({ model, record_id, fields }) => {
+    const uid = await getOdooUid();
+    const searchParams: any = {};
+    
+    if (fields && fields.length) {
+      searchParams.fields = fields;
+    }
+
+    try {
+      const records = await odooJsonRpc('call', {
+        service: 'object',
+        method: 'execute_kw',
+        args: [
+          ODOO_DB,
+          uid,
+          ODOO_PASSWORD,
+          model,
+          'read',
+          [record_id],
+          searchParams
+        ]
+      });
+
+      if (records.length === 0) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `No record found with ID ${record_id} in model ${model}`
+            }
+          ]
+        };
+      }
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify(records[0], null, 2)
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Error fetching record ${record_id} from ${model}: ${error}`
+          }
+        ]
+      };
+    }
+  }
+);
+
+server.tool(
   'get-related-models',
   'List all related models for a given Odoo model (via many2one, one2many, many2many fields).',
   {
